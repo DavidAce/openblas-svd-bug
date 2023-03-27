@@ -1,0 +1,14 @@
+[requires]
+h5pp/1.11.0
+fmt/9.1.0
+spdlog/1.11.0
+eigen/3.4.0
+backward-cpp/1.6
+
+[generators]
+CMakeDeps
+
+[options]
+backward-cpp:stack_walking=unwind
+backward-cpp:stack_details=dw
+

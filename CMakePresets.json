@@ -1,0 +1,190 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 24,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "default",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "BUILD_SHARED_LIBS": "FALSE",
+        "CMAKE_VERBOSE_MAKEFILE": "FALSE",
+        "CMAKE_MESSAGE_LOG_LEVEL": "STATUS",
+        "CMAKE_C_STANDARD": "17",
+        "CMAKE_CXX_STANDARD": "17",
+        "CMAKE_CXX_STANDARD_REQUIRED": "TRUE",
+        "CMAKE_CXX_EXTENSIONS": "FALSE",
+        "CMAKE_POSITION_INDEPENDENT_CODE": "TRUE",
+        "THREADS_PREFER_PTHREAD_FLAG": "TRUE",
+        "CMAKE_CXX_FLAGS": "-g -fdiagnostics-color=always",
+        "CMAKE_CXX_FLAGS_DEBUG": "-O0 -g3 -ggdb -fstack-protector-strong -D_FORTIFY_SOURCE=2",
+        "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-Og -g3 -ggdb -fstack-protector-strong -D_FORTIFY_SOURCE=2",
+        "CMAKE_C_FLAGS": "-g -fdiagnostics-color=always",
+        "CMAKE_C_FLAGS_DEBUG": "-O0 -g3 -ggdb -fstack-protector-strong -D_FORTIFY_SOURCE=2 -fno-omit-frame-pointer",
+        "CMAKE_C_FLAGS_RELWITHDEBINFO": "-Og -g3 -ggdb  -fstack-protector-strong -D_FORTIFY_SOURCE=2",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "TRUE"
+      }
+    },
+    {
+      "name": "openblas",
+      "hidden": true,
+      "environment": {
+        "BLA_VENDOR": "OpenBLAS",
+        "CMAKE_PREFIX_PATH": "$penv{OpenBLAS_ROOT};$penv{BLASROOT};$penv{EBROOTOPENBLAS};$penv{CMAKE_PREFIX_PATH}"
+      }
+    },
+    {
+      "name": "mkl",
+      "hidden": true,
+      "environment": {
+        "BLA_VENDOR": "Intel10_64lp",
+        "MKLROOT": "/opt/intel/oneapi/mkl/latest:$penv{MKLROOT}:$penv{EBROOTIMKL}"
+      }
+    },
+    {
+      "name": "release",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "debug",
+      "hidden": true,
+      "cacheVariables": {
+        "BUILD_SHARED_LIBS": "TRUE",
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_MAKEFILE_VERBOSE": "TRUE",
+        "CMAKE_MESSAGE_LOG_LEVEL": "VERBOSE",
+        "COMPILER_ENABLE_ASAN": "TRUE",
+        "COMPILER_ENABLE_USAN": "TRUE",
+        "CMAKE_INTERPROCEDURAL_OPTIMIZATION": "FALSE"
+      },
+      "environment": {
+        "VERBOSE": "1"
+      }
+    },
+    {
+      "name": "native",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS_RELEASE": "-O3 -DNDEBUG -march=native -mtune=native",
+        "CMAKE_C_FLAGS_RELEASE": "-O3 -DNDEBUG -march=native -mtune=native"
+      }
+    },
+    {
+      "name": "haswell",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS_RELEASE": "-O3 -DNDEBUG -march=haswell -mtune=haswell",
+        "CMAKE_C_FLAGS_RELEASE": "-O3 -DNDEBUG -march=haswell -mtune=haswell"
+      }
+    },
+    {
+      "name": "conan",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_PROJECT_TOP_LEVEL_INCLUDES": "${sourceDir}/cmake/conan1/conan_provider.cmake",
+        "CMAKE_FIND_PACKAGE_PREFER_CONFIG": "TRUE"
+      },
+      "environment": {
+        "PATH": "$env{HOME}/miniconda3/envs/dmrg/bin:$env{HOME}/anaconda3/envs/dmrg/bin:$env{HOME}/miniconda3/bin:$penv{PATH}"
+      }
+    },
+    {
+      "name": "release-native-mkl",
+      "displayName": "Release|conan|march=native|mkl",
+      "inherits": [
+        "native",
+        "mkl",
+        "conan",
+        "release",
+        "default"
+      ]
+    },
+    {
+      "name": "release-native-openblas",
+      "displayName": "Release|conan|march=native|openblas",
+      "inherits": [
+        "native",
+        "openblas",
+        "conan",
+        "release",
+        "default"
+      ]
+    },
+    {
+      "name": "release-haswell-mkl",
+      "displayName": "Release|conan|march=haswell|mkl",
+      "inherits": [
+        "haswell",
+        "mkl",
+        "conan",
+        "release",
+        "default"
+      ]
+    },
+    {
+      "name": "release-haswell-openblas",
+      "displayName": "Release|conan|march=haswell|openblas",
+      "inherits": [
+        "haswell",
+        "openblas",
+        "conan",
+        "release",
+        "default"
+      ]
+    },
+    {
+      "name": "debug-mkl",
+      "displayName": "Debug|conan|mkl|shared|asan",
+      "inherits": [
+        "mkl",
+        "conan",
+        "debug",
+        "default"
+      ]
+    },
+    {
+      "name": "debug-openblas",
+      "displayName": "Debug|conan|mkl|shared|asan",
+      "inherits": [
+        "openblas",
+        "conan",
+        "debug",
+        "default"
+      ]
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "release-native-mkl",
+      "configurePreset": "release-native-mkl"
+    },
+    {
+      "name": "release-native-openblas",
+      "configurePreset": "release-native-openblas"
+    },
+    {
+      "name": "release-haswell-mkl",
+      "configurePreset": "release-haswell-mkl"
+    },
+    {
+      "name": "release-haswell-openblas",
+      "configurePreset": "release-haswell-openblas"
+    },
+    {
+      "name": "debug-mkl",
+      "configurePreset": "debug-mkl"
+    },
+    {
+      "name": "debug-openblas",
+      "configurePreset": "debug-openblas"
+    }
+  ]
+}
