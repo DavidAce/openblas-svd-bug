@@ -18,7 +18,7 @@ void merge() {
                 auto seed = h5src.readAttribute<long>(group, "seed");
                 auto A = h5src.readDataset<svd::MatrixType<svd::cplx>>(fmt::format("{}/A_cplx", group));
                 auto routine = h5src.readAttribute<std::string>(group, "svd_rtn");
-                h5tgt.writeDataset(A, fmt::format("{}-{}", group, seed), H5D_layout_t::H5D_CHUNKED);
+                h5tgt.writeDataset(A, fmt::format("{}-{}/A_cplx", group, seed), H5D_layout_t::H5D_CHUNKED);
                 h5tgt.writeAttribute(routine, fmt::format("{}-{}", group, seed), "svd_rtn");
 //                h5tgt.copyLinkFromLocation(fmt::format("{}-{}", group, seed), h5src.openFileHandle(), group);
                 counter++;
